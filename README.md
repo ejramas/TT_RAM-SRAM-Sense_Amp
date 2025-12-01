@@ -13,3 +13,4 @@ A sense amplifier is a specialized circuit in RAM that amplifies very small volt
 This specific design is a differential amplifier implemented using paired CMOS inverters and a A common-mode correction feedback network.
 
 ## Schematic
+![Alt text](docs/Sense_Amp-Schem.png)
