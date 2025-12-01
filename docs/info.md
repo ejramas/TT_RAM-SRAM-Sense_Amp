@@ -6,15 +6,89 @@ sections.
 You can also include images in this folder and reference them in the markdown. Each image must be less than
 512 kb in size, and the combined size of all images must be less than 1 MB.
 -->
+## Objective
+
+The objective of this project is to design a RAM sense amplifier for the University of Waterloo's ECE298A Tiny-Tapout RAM group
+
+A sense amplifier is a specialized circuit in RAM that amplifies very small voltage differences on paired bitlines. During a read operation, memory cells apply a small differential voltage between the bitlines, which this circuit will convert into logic-level output that digital circuitry can reliably interpret.
+
+The initial goal parameters for this project were as follows:
+
+| Parameter | Value | Reasoning  |
+|-------|-------|-------|
+| Sensitivity | 10mV | This parameter will depend on how much the bit line voltages change before reading, which in turn is based on the relative capacitance of the storage cell and the bit line. A very conservative estimate is 10mV. |
+| Gain | 43.5dB | Assume a minimal reliable logical high detection at 1.5V, and read only moves the data lines by 10mV. Target gain would then be 150x or 43.5dB.  |
+| Speed | 0.17V/ns slew rate | Assuming a clock speed of 50MHz (TinyTapeout max of 66MHz) gives 20ns per clock cycle. Assume we want the amplification to take no longer than 30% of the clock cycle. This gives 6ns, so approx. 1V/6ns. The final value will require coordination with other teams to determine how long an amplified read takes, and what else needs to be accomplished in a clock cycle that might reduce the amount of time allowable for amplification.  |
+| Power Consumption | 10mW | Rough estimation for now. The exact power can be extracted from simulations and specific targets can be set on what is realistic.  |
+
+## Schematic
+
+![Alt text](Sense_Amp-Schem.png)
 
 ## How it works
 
-Explain how your project works
+During a read operation, the bitlines in_p and in_m carry a very small voltage difference produced by the selected memory cell. This small difference is inverted and dramatically amplified by the CMOS's at each input. 
 
-## How to test
+These amplified voltages feed into the gates of a pair of NMOS's which control the current through each of the CMOS inverters. Since the current in the circuit is held constant due to the current mirror current source, these NMOS's convert the amplified voltages into a differential pair, rejecting any common mode voltage and outputting the amplified voltage difference centered at 0.9V.
 
-Explain how to use your project
+## Design & Testing Process
 
-## External hardware
+### Design #1 (Oct 1 - Nov 8)
 
-List external hardware used in your project (e.g. PMOD, LED display, etc), if any
+The original design for this sense amp was two CMOS amplifiers with cross coupled CMOS's for common-mode correction.
+
+![Alt text](Design1_Sense_Amp.png)
+
+We spent a while on this design tweaking the width and length values to try to obtain faster response, better rail to rail swing, and a output common mode of 0.9V with an input common mode of 0.9V. However, there were multiple issues with this design that ultimately made it unfeasible.
+
+Firstly, the cross coupled CMOS's had to be made extremely small in order to not overpower the initial inverters. This made the common mode correction extremely slow.
+
+Secondly, we encountered an issue with the output not demonstrating the expected inversion. For some reason, the output (although showing otherwise correct behaviour due to our tweaks) would often not invert depending on the input. We were unable to determine the cause of this, with our main theory being that noise causes the circuit to flip in one direction early, and the input inverters being unable to overpower the cross coupled inverters (which were already near the minimum size) once the output was already rail-to-rail.
+[insert image of simulation here]
+
+Ultimately, we were provided an alternative design.
+
+### Design #2 (Nov 8 - Nov 19)
+
+[insert image of schem here]
+
+This design matches our current design extremely closely, and overall has the same functionality. Two CMOS amplifiers voltages feed into the gates of a pair of NMOS's which control the current flowing through the respective CMOS. Since the current in the circuit is held constant due to the current mirror current source, these NMOS's convert the amplified voltages into a differential pair, rejecting any common mode voltage and outputting the amplified voltage difference centered at 0.9V.
+
+This new design had far better bandwidth, but had issues with gain. After tweaking the Widths and Lengths more, we arrived at a final maximum gain of 28dB (with a 20mV input differential at 0.9V common mode).
+[insert image of simulation here]
+
+Additionally, this design was extremely sensitive to common mode. With any shifts in common mode the output magnitude completely collapsed.
+[insert image of simulation here]
+
+### Design #3
+
+[insert image of final schem here]
+
+Lastly, we were suggested to connect the sources of the CMOS NMOS' together (*NOTE TO SELF: ADD EXPLANATION ON WHAT THIS ACTUALLY DOES). This remarkably increased gain and made it so the output common mode is always 0.9V (ONCE AGAIN, EXPLAIN WHY THIS HAPPENS). After after replacing the single PMOS current source with a PMOS current mirror current source and adjusting the widths/lengths to maximize gain, we were able to achieve a final gain of 33.7dB (with a 20mV input differential at 0.9V common mode).
+[insert image of simulation here]
+
+This design also was far more resistant to a change in common mode input
+[insert image of simulation]
+
+Our initial values for widths and lengths were using a current mirror with far too long lengths, which made layout unfeasible. After a quick redesign, and strategically using multiplicity and fingers to compress the size of our MOFSETS, we arrived at the following layout, with the following simulation
+[insert image of layout]
+[insert image of simulation]
+
+## Final Design & Parameters
+
+### MOSFET Parameters
+| MOSFET | Length | Width | 
+|-------|-------|-------|
+| Current Mirror PMOS | 180n | 10u |
+| Inverter PMOS | 500n | 7u |
+| Inverter NMOS | 500n | 1u |
+| Feedback NMOS | 180n | 1u |
+
+### Functional Parameters
+| Parameter | Value | Result / Comment | 
+|-------|-------|-------|
+| Sensitivity | 32mV | Assuming a minimum logic-high level of 1.5V, this level is reached (at ideal 0.9V common mode) at a 35mV voltage differential |
+| Gain | 31.5dB | Using values above (32mV differential input, 1.2V differential output). Far lower than initially planned, but the inital value was found to be unecessary, as from testing, the input voltage differential could be as high as 800mV |
+| Speed | 0.125V/ns slew rate | Far higher than expected or needed |
+| Power Consumption | 270uW | typical voltage draw of around 150uA. Total power is 150uA * 1.8V = 270uW |
+
