@@ -44,31 +44,31 @@ We spent a while on this design tweaking the width and length values to try to o
 Firstly, the cross coupled CMOS's had to be made extremely small in order to not overpower the initial inverters. This made the common mode correction extremely slow.
 
 Secondly, we encountered an issue with the output not demonstrating the expected inversion. For some reason, the output (although showing otherwise correct behaviour due to our tweaks) would often not invert depending on the input. We were unable to determine the cause of this, with our main theory being that noise causes the circuit to flip in one direction early, and the input inverters being unable to overpower the cross coupled inverters (which were already near the minimum size) once the output was already rail-to-rail.
-[insert image of simulation here]
+![Alt text](Design1_Sim.png)
 
 Ultimately, we were provided an alternative design.
 
 ### Design #2 (Nov 8 - Nov 19)
 
-[insert image of schem here]
+![Alt text](Design2_Sense_Amp.png)
 
 This design matches our current design extremely closely, and overall has the same functionality. Two CMOS amplifiers voltages feed into the gates of a pair of NMOS's which control the current flowing through the respective CMOS. Since the current in the circuit is held constant due to the current mirror current source, these NMOS's convert the amplified voltages into a differential pair, rejecting any common mode voltage and outputting the amplified voltage difference centered at 0.9V.
 
 This new design had far better bandwidth, but had issues with gain. After tweaking the Widths and Lengths more, we arrived at a final maximum gain of 28dB (with a 20mV input differential at 0.9V common mode).
-[insert image of simulation here]
+![Alt text](Design2_Sim.png)
 
-Additionally, this design was extremely sensitive to common mode. With any shifts in common mode the output magnitude completely collapsed.
-[insert image of simulation here]
+Additionally, this design was extremely sensitive to changes in the input voltage differential. Shifts in input common mode result in a shift in output common mode. The following simulation shows maximum voltage (x-axis) vs. Common-Mode (y-axis), with 10mV steps of input differential from 10mV to 200mV.
+![Alt text](Design2_Sim2.png)
 
 ### Design #3
 
-[insert image of final schem here]
+![Alt text](Sense_Amp-Schem.png)
 
-Lastly, we were suggested to connect the sources of the CMOS NMOS' together (*NOTE TO SELF: ADD EXPLANATION ON WHAT THIS ACTUALLY DOES). This remarkably increased gain and made it so the output common mode is always 0.9V (ONCE AGAIN, EXPLAIN WHY THIS HAPPENS). After after replacing the single PMOS current source with a PMOS current mirror current source and adjusting the widths/lengths to maximize gain, we were able to achieve a final gain of 33.7dB (with a 20mV input differential at 0.9V common mode).
-[insert image of simulation here]
+Lastly, we were suggested to connect the sources of the CMOS NMOS' together (*NOTE TO SELF: ADD EXPLANATION ON WHAT THIS ACTUALLY DOES). This remarkably increased gain and made it so the output common mode is always 0.9V (ONCE AGAIN, EXPLAIN WHY THIS HAPPENS). After after replacing the single PMOS current source with a PMOS current mirror current source and adjusting the widths/lengths to maximize gain, we were able to achieve a final gain of 33.7dB (with a 20mV input differential at 0.9V common mode). 
+![Alt text](Design3_Sim1.png)
 
-This design also was far more resistant to a change in common mode input
-[insert image of simulation]
+This design also was far more resistant to a change in input differential, along with better common-mode offset behaviour. The following simulation shows maximum voltage (x-axis) vs. Common-Mode (y-axis), with 10mV steps of input differential from 10mV to 200mV.
+![Alt text](Design3_Sim2.png)
 
 Our initial values for widths and lengths were using a current mirror with far too long lengths, which made layout unfeasible. After a quick redesign, and strategically using multiplicity and fingers to compress the size of our MOFSETS, we arrived at the following layout, with the following simulation
 [insert image of layout]
