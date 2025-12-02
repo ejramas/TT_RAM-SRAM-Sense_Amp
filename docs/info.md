@@ -64,8 +64,10 @@ Additionally, this design was extremely sensitive to changes in the input voltag
 
 ![Alt text](Sense_Amp-Schem.png)
 
-Lastly, we were suggested to connect the sources of the CMOS NMOS' together (*NOTE TO SELF: ADD EXPLANATION ON WHAT THIS ACTUALLY DOES). This remarkably increased gain and made it so the output common mode is always 0.9V (ONCE AGAIN, EXPLAIN WHY THIS HAPPENS). After after replacing the single PMOS current source with a PMOS current mirror current source and adjusting the widths/lengths to maximize gain, we were able to achieve a final gain of 33.7dB (with a 20mV input differential at 0.9V common mode). 
+Lastly, we were suggested to connect the sources of the CMOS NMOS' together. This makes the effective resistance of the source of the NMOS and the ground zero, which dramatically increases the gain of the CMOS inverter while still maintaining the differential output of the circuit. This remarkably increased gain and made it so the output common mode is always 0.9V. After  adjusting the widths/lengths to maximize gain, we were able to achieve a final gain of 33.7dB (with a 20mV input differential at 0.9V common mode). 
 ![Alt text](Design3_Sim1.png)
+
+Additionally, we replace the current source from a MOSFET with a bias voltage, to a current mirror. The effect this has is to make the current far more consistent. Using a single MOSFET would make the current extremely sensitive to slight changes in V_T and other MOSFET parameters, whereas using a current mirror uses MOSFETs with matched geometries and uses a resistor as the main reference for the current, thus making the current far more predictable.
 
 This design also was far more resistant to a change in input differential, along with better common-mode offset behaviour. The following simulation shows maximum voltage (x-axis) vs. Common-Mode (y-axis), with 10mV steps of input differential from 10mV to 200mV.
 ![Alt text](Design3_Sim2.png)
