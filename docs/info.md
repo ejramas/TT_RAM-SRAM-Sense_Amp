@@ -52,7 +52,7 @@ Ultimately, we were provided an alternative design.
 
 ![Alt text](Design2_Sense_Amp.png)
 
-This design matches our current design extremely closely, and overall has the same functionality. Two CMOS amplifiers voltages feed into the gates of a pair of NMOS's which control the current flowing through the respective CMOS. Since the current in the circuit is held constant due to the current mirror current source, these NMOS's convert the amplified voltages into a differential pair, rejecting any common mode voltage and outputting the amplified voltage difference centered at 0.9V.
+This design matches our current design extremely closely, and overall has the same functionality. Two CMOS amplifiers voltages feed into the gates of a pair of NMOS's which control the current flowing through the respective CMOS. The CMOS' amplified voltages feed into the repective NMOS, which control the current flowing through that CMOS. This feedback works as a sort of common mode correction.
 
 This new design had far better bandwidth, but had issues with gain. After tweaking the Widths and Lengths more, we arrived at a final maximum gain of 28dB (with a 20mV input differential at 0.9V common mode).
 ![Alt text](../test/LTSpice/Design2_Sim.png)
@@ -64,7 +64,7 @@ Additionally, this design was extremely sensitive to changes in the input voltag
 
 ![Alt text](Sense_Amp-Schem.png)
 
-Lastly, we were suggested to connect the sources of the CMOS NMOS' together. This makes the effective resistance of the source of the NMOS and the ground zero, which dramatically increases the gain of the CMOS inverter while still maintaining the differential output of the circuit. This remarkably increased gain and made it so the output common mode is always 0.9V. After  adjusting the widths/lengths to maximize gain, we were able to achieve a final gain of 33.7dB (with a 20mV input differential at 0.9V common mode). 
+Lastly, we were suggested to connect the sources of the CMOS NMOS' together. This makes the effective resistance of the source of the NMOS and the ground zero, which dramatically increases the gain of the CMOS inverter. As the CMOS's amplified voltages feed into the two NMOS's, which either reduce or increase the amount of current flowing through the circuit. This feedback works as a sort of common mode correction. This remarkably increased gain and made it so the output common mode is always 0.9V. After adjusting the widths/lengths to maximize gain, we were able to achieve a final gain of 33.7dB (with a 20mV input differential at 0.9V common mode). 
 ![Alt text](../test/LTSpice/Design3_Sim1.png)
 
 Additionally, we replace the current source from a MOSFET with a bias voltage, to a current mirror. The effect this has is to make the current far more consistent. Using a single MOSFET would make the current extremely sensitive to slight changes in V_T and other MOSFET parameters, whereas using a current mirror uses MOSFETs with matched geometries and uses a resistor as the main reference for the current, thus making the current far more predictable.
