@@ -79,7 +79,13 @@ Our initial values for widths and lengths were using a current mirror with far t
 [insert image of layout]
 [insert image of simulation]
 
-As you may have noticed, the results of the layout simulation are completely different from that of the LTSpice simulations. The inclusion of parasitics have had a massive effect on our circuit, which has severly reduced our sense amplifier's bandwidth and has shifted the common-mode of the output to about 0.5V rather than 0.9V. Had we had a bit more time to work on this without sacrificing our time studying for finals, we would have continued to change our values to take this common mode into effect.
+As you may have noticed, the results of the layout simulation are completely different from that of the LTSpice simulations. The inclusion of parasitics have had a massive effect on our circuit, which has severly reduced our sense amplifier's bandwidth and has shifted the common-mode of the output to about 0.5V rather than 0.9V. In particular, the extremely limited bandwidth is most likely a result of parasitic capacitances in the circuit
+
+The main issue that in this circuit was with the shifted output common mode, which according to the simulations was around 0.5V rather than the expected 0.9V. The main way that we found to fix this was to implement a CMOS amplifier on the outputs. This inverter would have a midpoint voltage of 0.5V and would convert the reduced and off-centre outputs of our inverter back to the expected rail-to-rail swing. We found that an NMOS width of 20um and a PMOS width of 1um (according to LTSPice) gets us a CMOS centered at 0.5V.
+[insert sims]
+And we layed it out with these added. Unfortunately, after a good 4 hours of fighting with the software, the project didn't save (despite me being absolutely certain that I saved twice). It was at this point where, after loosing all our progress, we were completely out of bandwidth to continue working on this, so unfortunately we were unable to get our circuit working as of this presentation.
+
+There was one other option that we had and we would've have attempted had we had the time, which was to change the resistor in the current mirror. We found that (according to our LTSpice simulations), changing the input current was was the only way to directly change the common mode of the circuit. Replacing the 10k resistor with a 1k resistor shifts the common mode up to 1.15V. 
 
 ## Final Design & Parameters
 
