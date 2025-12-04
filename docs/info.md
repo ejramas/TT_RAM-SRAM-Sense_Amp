@@ -61,7 +61,7 @@ This new design had far better bandwidth, but had issues with gain. After tweaki
 ![Alt text](../test/LTSpice/Design2_Sim.png)
 
 
-Additionally, this design was extremely sensitive to changes in the input voltage differential. Shifts in input common mode result in a shift in output common mode. The following simulation shows maximum voltage (x-axis) vs. Common-Mode (y-axis), with 10mV steps of input differential from 10mV to 200mV.
+Additionally, this design was extremely sensitive to changes in the input voltage differential. Shifts in input common mode result in a shift in ideal input common mode. The following simulation shows maximum voltage (x-axis) vs. Common-Mode (y-axis), with 10mV steps of input differential from 10mV to 200mV.
 ![Alt text](../test/LTSpice/Design2_Sim2.png)
 
 
