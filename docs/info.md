@@ -97,7 +97,7 @@ A common-mode offset on the input still creates a common-mode offset in the outp
 |-------|-------|-------|
 | Sensitivity | 32mV | Assuming a minimum logic-high level of 1.5V, this level is reached (at ideal 0.9V common mode) at a 35mV voltage differential |
 | Gain | 31.5dB | Using values above (32mV differential input, 1.2V differential output). Far lower than initially planned, but the inital value was found to be unecessary, as from testing, the input voltage differential could be as high as 800mV |
-| Speed | 0.125V/ns slew rate | Far higher than expected or needed |
+| Speed | 0.125V/ns slew rate | |
 | Power Consumption | 270uW | typical voltage draw of around 150uA. Total power is 150uA * 1.8V = 270uW |
 
 
@@ -124,6 +124,11 @@ The other way we found to fix this was to implement a CMOS amplifier on the outp
 Here is the updated layout with the CMOS inverter (which we had to do TWICE since for some reason my original file got corrupted after like 4 hours of work trying to make it look neat. This second attempt is noticably far less elegant).
 ![Alt text](../mag/Screenshots/SenseAmp_Layout_wOutputInverters.png)
 
+And upon testing, we found that this exhibited the correct switching behaviour.
+![Alt text](../test/NGSpice/Secondary_Amp_Sim.png)
+
+Though, there are a few issues evident as found in this simulation. Firstly, although the switching behavior is correct, the output common mode is still incorrect. Is exhibits the correct switching behaviour in this simulation because it has rail-to-rail swing, but as could be seen at the start of the simulation, the output common mode is still far lower than the 0.9V ideal. In-fact it appears to be worse, with both outputs being at around 0.2V when there is no output differential (as opposed to the expected 0.9V). This however could be fixed by further tweaking the sizes of the output CMOS.
+Additionally, the bandwidth of the amplifier seems to have been heavily reduced, with a period taking approximately 80ns or having a maximum frequency of 12.5MHz.
 
 ## Final Design & Parameters
 
@@ -134,15 +139,11 @@ Here is the updated layout with the CMOS inverter (which we had to do TWICE sinc
 | Inverter PMOS | 500n | 7u |
 | Inverter NMOS | 500n | 1u |
 | Feedback NMOS | 180n | 1u |
-| *Secondary Amp NMOS | 180n | 20u |
-| *Secondary Amp PMOS | 180n | 1u |
+| Secondary Amp NMOS | 180n | 20u |
+| Secondary Amp PMOS | 180n | 1u |
 
-### *Functional Parameters (From NGSpice Simulations)
+###Functional Parameters (From NGSpice Simulations)
 | Parameter | Value | Result / Comment |
 |-------|-------| |
-| Gain | 15dB | The LTSpice tests assume a input differential of 32mV. The NGSpice tests were conducted at a slightly more realistic value of 100mV, thus reducing the overall gain  |
-| Speed | 0.125V/ns slew rate | |
-| **Power Consumption | 270uW | |
-
-*The secondary amplifiers haven't yet been tested, so these parameters are for the orignal layout with the non-ideal common mode
-** Power consumption wasn't included in our NGSpice simulation. This value assumes a simular value to the LTSpice simulation
+| Gain | 25dB | The LTSpice tests assume a input differential of 32mV. The NGSpice tests were conducted at a slightly more realistic value of 100mV, thus reducing the overall gain  |
+| Speed | 0.05V/ns slew rate | Far slower than intially planned. Max Frequency of 12.5MHz |
