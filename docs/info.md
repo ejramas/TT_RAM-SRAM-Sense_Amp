@@ -144,6 +144,6 @@ Additionally, the bandwidth of the amplifier seems to have been heavily reduced,
 
 ###Functional Parameters (From NGSpice Simulations)
 | Parameter | Value | Result / Comment |
-|-------|-------| |
+|-------|-------|-------|
 | Gain | 25dB | The LTSpice tests assume a input differential of 32mV. The NGSpice tests were conducted at a slightly more realistic value of 100mV, thus reducing the overall gain  |
 | Speed | 0.05V/ns slew rate | Far slower than intially planned. Max Frequency of 12.5MHz |
