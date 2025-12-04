@@ -29,7 +29,7 @@ The initial goal parameters for this project were as follows:
 
 During a read operation, the bitlines in_p and in_m carry a very small voltage difference produced by the selected memory cell. This small difference is inverted and dramatically amplified by the CMOS's at each input. 
 
-These amplified voltages feed into the gates of a pair of NMOS's which control the current through each of the CMOS inverters. Since the current in the circuit is held constant due to the current mirror current source, these NMOS's convert the amplified voltages into a differential pair, rejecting any common mode voltage and outputting the amplified voltage difference centered at 0.9V.
+These amplified voltages feed into the gates of a pair of NMOS's which either reduce or increase the amount of current flowing through the circuit. This feedback works to correct the common mode of the output
 
 ## Design & Testing Process
 
