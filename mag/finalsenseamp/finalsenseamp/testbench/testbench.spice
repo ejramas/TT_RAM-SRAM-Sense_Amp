@@ -1,0 +1,38 @@
+* SRAM Cell Testbench for NGSpice
+* Include the extracted netlist
+.include finalsenseamp.spice
+.lib /usr/local/share/pdk/sky130A/libs.tech/ngspice/sky130.lib.spice tt
+
+* Supply voltage
+.param SUPPLY=1.8
+
+* Instantiate the SRAM cell
+XSRAMAMP VDD GND bitline_p bitline_n new_out_p new_out_n comgate vdp vsp finalsenseamp
+
+* Power supply
+VDD VDD 0 DC {SUPPLY}
+
+******** DC INPUT
+*Vinp bitline_p 0 PWL(0ns 0.9 15.1ns 0.9)
+*Vinm bitline_n 0 PWL(0ns 0.9 15.1ns 0.9)
+
+******** REGULAR INPUT
+*Vinp bitline_p 0 PWL(0ns 0.88 0.1ns 0.92 7.5ns 0.92 7.6ns 0.88 15ns 0.88 15.1ns 0.92)
+*Vinm bitline_n 0 PWL(0ns 0.92 0.1ns 0.88 7.5ns 0.88 7.6ns 0.92 15ns 0.92 15.1ns 0.88)
+
+*Vinp bitline_p 0 PWL(0ns 0.88 1ns 0.92 75ns 0.92 76ns 0.88 150ns 0.88 151ns 0.92)
+*Vinm bitline_n 0 PWL(0ns 0.92 1ns 0.88 75ns 0.88 76ns 0.92 150ns 0.92 151ns 0.88)
+
+******** 25MHz 50mV INPUT
+Vinp bitline_p 0 PWL (0ns 0.9 1ns 0.95 19ns 0.95 21ns 0.85 39ns 0.85 40ns 0.9)
+Vinm bitline_n 0 PWL (0ns 0.9 1ns 0.85 19ns 0.85 21ns 0.95 39ns 0.95 40ns 0.9)
+
+******** SLOWED INPUT
+*Vinp bitline_p 0 PWL(0us 0.88 0.1us 0.92 7.5us 0.92 7.6us 0.88 15us 0.88 15.1us 0.92)
+*Vinm bitline_n 0 PWL(0us 0.92 0.1us 0.88 7.5us 0.88 7.6us 0.92 15us 0.92 15.1us 0.88)
+
+.control
+tran 0.1n 40n
+plot v(bitline_p) v(bitline_n) v(new_out_p) v(new_out_n)
+print v(bitline_p) v(bitline_n) v(new_out_p) v(new_out_n)
+.endc
