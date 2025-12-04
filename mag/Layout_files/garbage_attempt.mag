@@ -1,0 +1,23 @@
+magic
+tech sky130A
+magscale 1 2
+timestamp 1764181242
+<< error_p >>
+rect 132 119 190 125
+rect 132 85 144 119
+rect 132 79 190 85
+<< error_s >>
+rect 964 19000 1436 19036
+rect 132 18647 190 18653
+rect 132 18613 144 18647
+rect 132 18607 190 18613
+rect 964 18400 1000 19000
+rect 1400 18400 1436 19000
+rect 964 18364 1436 18400
+<< nsubdiffcont >>
+rect 1000 18400 1400 19000
+use sky130_fd_pr__pfet_01v8_KT2VVS  sky130_fd_pr__pfet_01v8_KT2VVS_0
+timestamp 1764181242
+transform 1 0 161 0 1 9366
+box -214 -9419 214 9419
+<< end >>
